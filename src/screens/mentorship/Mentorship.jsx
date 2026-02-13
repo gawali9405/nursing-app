@@ -1,10 +1,25 @@
-import React from "react";
-import { View, Text } from "react-native";
+import React, { useState, useEffect } from "react";
+import { Text } from "react-native";
+import ScreenWrapper from "../../components/layout/ScreenWrapper";
 
 export default function Mentorship() {
+  const [loading, setLoading] = useState(true);
+  const [mentors, setMentors] = useState([]);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setMentors(["Dr. Sharma", "Prof. Mehta", "Ms. Gupta"]);
+      setLoading(false);
+    }, 1500);
+  }, []);
+
   return (
-    <View className="flex-1 items-center justify-center">
-      <Text className="text-xl font-bold">Mentorship Screen</Text>
-    </View>
+    <ScreenWrapper title="Mentorship" loading={loading}>
+      {mentors.map((mentor, index) => (
+        <Text key={index} className="text-gray-800 text-lg mb-2">
+          {mentor}
+        </Text>
+      ))}
+    </ScreenWrapper>
   );
 }

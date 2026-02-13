@@ -1,10 +1,25 @@
- import React from "react";
-import { View, Text } from "react-native";
+import React, { useState, useEffect } from "react";
+import { Text } from "react-native";
+import ScreenWrapper from "../../components/layout/ScreenWrapper";
 
 export default function ExamList() {
+  const [loading, setLoading] = useState(true);
+  const [exams, setExams] = useState([]);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setExams(["AIIMS", "RRB", "NORCET", "ESIC"]);
+      setLoading(false);
+    }, 1500);
+  }, []);
+
   return (
-    <View className="flex-1 items-center justify-center">
-      <Text className="text-xl font-bold">Exam List Screen</Text>
-    </View>
+    <ScreenWrapper title="Exam List" loading={loading}>
+      {exams.map((exam, index) => (
+        <Text key={index} className="text-gray-800 text-lg mb-2">
+          {exam}
+        </Text>
+      ))}
+    </ScreenWrapper>
   );
 }

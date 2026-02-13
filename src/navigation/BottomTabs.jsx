@@ -1,19 +1,30 @@
 import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Ionicons } from "@expo/vector-icons";
+import { useRoute } from "@react-navigation/native";
 
 import Home from "../screens/home/Home";
 import ExamList from "../screens/exam/ExamList";
 import Mentorship from "../screens/mentorship/Mentorship";
 import Profile from "../screens/profile/Profile";
+import AppHeader from "../components/layout/AppHeader";
 
 const Tab = createBottomTabNavigator();
 
 export default function BottomTabs() {
+  // Map screen names to header titles
+  const headerTitles = {
+    Home: "Home",
+    ExamList: "Exam List",
+    Mentorship: "Mentorship",
+    Profile: "Profile",
+  };
+
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
-        headerShown: false,
+        headerShown: true, // enable header
+        header: () => <AppHeader title={headerTitles[route.name]} />, // dynamic title
         tabBarIcon: ({ color, size }) => {
           let iconName;
           switch (route.name) {
@@ -36,6 +47,7 @@ export default function BottomTabs() {
         },
         tabBarActiveTintColor: "#007AFF",
         tabBarInactiveTintColor: "gray",
+        tabBarStyle: { backgroundColor: "#f8f8f8", borderTopWidth: 0 },
       })}
     >
       <Tab.Screen name="Home" component={Home} />
