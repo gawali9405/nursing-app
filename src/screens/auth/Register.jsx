@@ -5,7 +5,6 @@ import {
   Image,
   View,
   TouchableOpacity,
-  TextInput,
   TouchableWithoutFeedback,
   Keyboard,
 } from "react-native";
@@ -13,6 +12,8 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { AntDesign, Feather } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
+
+import Input from "../../components/common/Input";
 import Loader from "../../components/common/Loader";
 import { supabase } from "../../services/supabaseClient";
 
@@ -45,28 +46,22 @@ export default function Register({ navigation }) {
 
     try {
       setLoading(true);
-
       const { data, error } = await supabase.auth.signUp({
         email: email.trim(),
         password,
         options: {
-          data: {
-            full_name: name,
-          },
+          data: { full_name: name },
         },
       });
 
-      if (error) {
-        return Alert.alert("Registration Error", error.message);
-      }
+      if (error) return Alert.alert("Registration Error", error.message);
 
       Alert.alert(
         "Success 🎉",
         "Account created! Please check your email to confirm your account."
       );
-
       navigation.replace("Login");
-    } catch (err) {
+    } catch {
       Alert.alert("Error", "Something went wrong. Please try again.");
     } finally {
       setLoading(false);
@@ -74,140 +69,126 @@ export default function Register({ navigation }) {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-white">
+    <SafeAreaView style={{ flex: 1, backgroundColor: "#fff" }}>
       <KeyboardAwareScrollView
         enableOnAndroid
         keyboardShouldPersistTaps="handled"
         contentContainerStyle={{ flexGrow: 1, padding: 24 }}
       >
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-          <View className="flex-1 justify-center">
-
+          <View style={{ flex: 1, justifyContent: "center" }}>
             {/* Logo */}
-            <View className="items-center mb-6">
+            <View style={{ alignItems: "center", marginBottom: 24 }}>
               <Image
                 source={require("../../assets/images/icon.png")}
-                className="w-36 h-36"
+                style={{ width: 144, height: 144 }}
                 resizeMode="contain"
               />
             </View>
 
-            <Text className="text-3xl font-bold text-center text-gray-800 mb-6">
+            <Text
+              style={{
+                fontSize: 28,
+                fontWeight: "bold",
+                textAlign: "center",
+                color: "#1F2937",
+                marginBottom: 24,
+              }}
+            >
               Create Account
             </Text>
 
             {/* Name */}
-            <View className="mb-5">
-              <View className="flex-row items-center border border-gray-300 rounded-lg px-4 py-2">
-                <AntDesign name="user" size={20} color="gray" />
-                <TextInput
-                  placeholder="Full Name"
-                  value={form.name}
-                  onChangeText={(text) =>
-                    setForm({ ...form, name: text })
-                  }
-                  className="flex-1 ml-3 text-base"
-                  autoCompleteType="name"
-                  autoComplete="name"
-                />
-              </View>
-            </View>
+            <Input
+              label="Full Name"
+              placeholder="Enter your full name"
+              value={form.name}
+              onChangeText={(text) => setForm({ ...form, name: text })}
+              icon={<AntDesign name="user" size={20} color="gray" />}
+            />
 
             {/* Email */}
-            <View className="mb-5">
-              <View className="flex-row items-center border border-gray-300 rounded-lg px-4 py-2">
-                <AntDesign name="mail" size={20} color="gray" />
-                <TextInput
-                  placeholder="Email"
-                  value={form.email}
-                  onChangeText={(text) =>
-                    setForm({ ...form, email: text })
-                  }
-                  className="flex-1 ml-3 text-base"
-                  keyboardType="email-address"
-                  autoCapitalize="none"
-                  textContentType="emailAddress"
-                  autoCompleteType="email"
-                  autoComplete="email"
-                />
-              </View>
-            </View>
+            <Input
+              label="Email"
+              placeholder="Enter your email"
+              value={form.email}
+              onChangeText={(text) => setForm({ ...form, email: text })}
+              icon={<AntDesign name="mail" size={20} color="gray" />}
+            />
 
             {/* Password */}
-            <View className="mb-4">
-              <View className="flex-row items-center border border-gray-300 rounded-xl px-4 py-2">
-                <Feather name="lock" size={20} color="gray" />
-                <TextInput
-                  placeholder="Password"
-                  value={form.password}
-                  onChangeText={(text) =>
-                    setForm({ ...form, password: text })
-                  }
-                  secureTextEntry={secure}
-                  className="flex-1 ml-3 text-base"
+            <Input
+              label="Password"
+              placeholder="Enter your password"
+              value={form.password}
+              onChangeText={(text) => setForm({ ...form, password: text })}
+              secureTextEntry={secure}
+              icon={
+                <Feather
+                  name={secure ? "eye-off" : "eye"}
+                  size={20}
+                  color="gray"
                 />
-                <TouchableOpacity onPress={() => setSecure(!secure)}>
-                  <Feather
-                    name={secure ? "eye-off" : "eye"}
-                    size={20}
-                    color="gray"
-                  />
-                </TouchableOpacity>
-              </View>
-            </View>
+              }
+              onIconPress={() => setSecure(!secure)}
+            />
 
             {/* Confirm Password */}
-            <View className="mb-6">
-              <View className="flex-row items-center border border-gray-300 rounded-xl px-4 py-2">
-                <Feather name="lock" size={20} color="gray" />
-                <TextInput
-                  placeholder="Confirm Password"
-                  value={form.confirmPassword}
-                  onChangeText={(text) =>
-                    setForm({ ...form, confirmPassword: text })
-                  }
-                  secureTextEntry={secureConfirm}
-                  className="flex-1 ml-3 text-base"
+            <Input
+              label="Confirm Password"
+              placeholder="Confirm your password"
+              value={form.confirmPassword}
+              onChangeText={(text) =>
+                setForm({ ...form, confirmPassword: text })
+              }
+              secureTextEntry={secureConfirm}
+              icon={
+                <Feather
+                  name={secureConfirm ? "eye-off" : "eye"}
+                  size={20}
+                  color="gray"
                 />
-                <TouchableOpacity
-                  onPress={() => setSecureConfirm(!secureConfirm)}
-                >
-                  <Feather
-                    name={secureConfirm ? "eye-off" : "eye"}
-                    size={20}
-                    color="gray"
-                  />
-                </TouchableOpacity>
-              </View>
-            </View>
+              }
+              onIconPress={() => setSecureConfirm(!secureConfirm)}
+            />
 
             {/* Register Button */}
             <TouchableOpacity
               onPress={handleRegister}
               disabled={loading}
-              className="mb-5 rounded-full overflow-hidden"
+              style={{ marginBottom: 14, borderRadius: 25, overflow: "hidden" }}
             >
               <LinearGradient
                 colors={["#2563EB", "#1E40AF"]}
                 start={{ x: 0, y: 0 }}
                 end={{ x: 1, y: 0 }}
-                className="py-4 items-center rounded-full"
+                style={{
+                  paddingVertical: 14,
+                  alignItems: "center",
+                  borderRadius: 25,
+                }}
               >
-                <Text className="text-white font-semibold text-lg">
+                <Text
+                  style={{ color: "#fff", fontSize: 18, fontWeight: "600" }}
+                >
                   {loading ? "Creating..." : "Register"}
                 </Text>
               </LinearGradient>
             </TouchableOpacity>
 
             {/* Login Link */}
-            <View className="flex-row justify-center">
-              <Text className="text-gray-600">
+            <View style={{ flexDirection: "row", justifyContent: "center" }}>
+              <Text style={{ color: "#6B7280", fontSize: 16 }}>
                 Already have an account?{" "}
               </Text>
-              <TouchableOpacity
-                onPress={() => navigation.navigate("Login")}
-              >
-                <Text className="text-blue-600 font-semibold">
+              <TouchableOpacity onPress={() => navigation.navigate("Login")}>
+                <Text
+                  style={{
+                    color: "#2563EB",
+                    fontSize: 16,
+                    fontWeight: "600",
+                  }}
+                >
                   Login
                 </Text>
               </TouchableOpacity>

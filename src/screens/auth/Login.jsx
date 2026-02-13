@@ -1,168 +1,104 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import {
   Alert,
   Text,
-  Image,
   View,
+  Image,
   TouchableOpacity,
-  TextInput,
   TouchableWithoutFeedback,
   Keyboard,
   Platform,
+  StyleSheet,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { AntDesign, Feather } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
-import Loader from "../../components/common/Loader";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import { supabase } from "../../services/supabaseClient";
+
+import Loader from "../../components/common/Loader";
+import Input from "../../components/common/Input";
+import { AuthContext } from "../../contexts/AuthContext";
 
 export default function Login({ navigation }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [secure, setSecure] = useState(true);
-  const [loading, setLoading] = useState(false);
+
+  const { signIn, loading } = useContext(AuthContext);
 
   const handleLogin = async () => {
     if (!email || !password) {
       return Alert.alert("Error", "Please enter email and password");
     }
-
     try {
-      setLoading(true);
-
-      const { data, error } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      });
-
-      if (error) {
-        throw error;
-      }
-
-      Alert.alert("Success", "Logged in successfully");
-      navigation.replace("Home");
+      await signIn(email, password);
     } catch (error) {
       Alert.alert("Login Error", error.message);
-    } finally {
-      setLoading(false);
     }
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-white">
+    <SafeAreaView style={styles.container}>
       <KeyboardAwareScrollView
         enableOnAndroid
         keyboardShouldPersistTaps="handled"
-        contentContainerStyle={{
-          flexGrow: 1,
-          paddingHorizontal: 24,
-          paddingVertical: 30,
-        }}
+        contentContainerStyle={styles.scrollContainer}
       >
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-          <View className="flex-1">
+          <View style={styles.inner}>
             {/* Logo */}
-            <View className="items-center mb-6">
-              <Image
-                source={require("../../assets/images/icon.png")}
-                className="w-36 h-36"
-                resizeMode="contain"
-              />
-            </View>
+            <Image
+              source={require("../../assets/images/icon.png")}
+              style={styles.logo}
+              resizeMode="contain"
+            />
 
             {/* Title */}
-            <Text className="text-3xl font-bold text-center text-gray-800 mb-10">
-              Welcome to NPath
-            </Text>
+            <Text style={styles.title}>Welcome to NPath</Text>
 
             {/* Email Input */}
-            <View className="mb-5">
-              <View className="flex-row items-center border border-gray-300 rounded-lg px-4 py-1">
-                <AntDesign name="mail" size={20} color="gray" />
-                <TextInput
-                  placeholder="Enter your email"
-                  value={email}
-                  onChangeText={setEmail}
-                  className="flex-1 ml-3 text-base"
-                  keyboardType="email-address"
-                  autoCapitalize="none"
-                  returnKeyType="next"
-                />
-              </View>
-            </View>
+            <Input
+              label="Email"
+              placeholder="Enter your email"
+              value={email}
+              onChangeText={setEmail}
+              icon={<AntDesign name="mail" size={20} color="gray" />}
+            />
 
             {/* Password Input */}
-            <View className="mb-6">
-              <View className="flex-row items-center border border-gray-300 rounded-xl px-4 py-1">
-                <Feather name="lock" size={20} color="gray" />
-                <TextInput
-                  placeholder="Enter your password"
-                  value={password}
-                  onChangeText={setPassword}
-                  secureTextEntry={secure}
-                  className="flex-1 ml-3 text-base"
-                  returnKeyType="done"
+            <Input
+              label="Password"
+              placeholder="Enter your password"
+              value={password}
+              onChangeText={setPassword}
+              secureTextEntry={secure}
+              icon={
+                <Feather
+                  name={secure ? "eye-off" : "eye"}
+                  size={20}
+                  color="gray"
                 />
-                <TouchableOpacity onPress={() => setSecure(!secure)}>
-                  <Feather
-                    name={secure ? "eye-off" : "eye"}
-                    size={20}
-                    color="gray"
-                  />
-                </TouchableOpacity>
-              </View>
-            </View>
+              }
+              onIconPress={() => setSecure(!secure)}
+            />
 
-            {/* Gradient Login Button */}
-            <TouchableOpacity
-              onPress={handleLogin}
-              className="mb-5 rounded-full overflow-hidden"
-            >
+            {/* Login Button */}
+            <TouchableOpacity onPress={handleLogin} style={styles.loginBtn}>
               <LinearGradient
                 colors={["#2563EB", "#1E40AF"]}
                 start={{ x: 0, y: 0 }}
                 end={{ x: 1, y: 0 }}
-                className="py-4 items-center rounded-full"
+                style={styles.gradient}
               >
-                <Text className="text-white font-semibold text-lg">
-                  Login
-                </Text>
+                <Text style={styles.loginText}>Login</Text>
               </LinearGradient>
             </TouchableOpacity>
 
-            {/* Forgot Password */}
-            <TouchableOpacity className="mb-6">
-              <Text className="text-center text-blue-600 font-medium">
-                Forgot Password?
-              </Text>
-            </TouchableOpacity>
-
-            {/* Google Button */}
-            <TouchableOpacity
-              className="bg-white py-4 rounded-xl w-full flex-row items-center justify-center border border-gray-200 mb-8 shadow-sm"
-            >
-              <Image
-                source={require("../../assets/images/google.png")}
-                style={{ width: 22, height: 22 }}
-                resizeMode="contain"
-              />
-              <Text className="text-gray-800 font-semibold text-lg ml-3">
-                Continue with Google
-              </Text>
-            </TouchableOpacity>
-
             {/* Sign Up */}
-            <View className="flex-row justify-center">
-              <Text className="text-gray-600">
-                Don't have an account?{" "}
-              </Text>
-              <TouchableOpacity
-                onPress={() => navigation.navigate("Register")}
-              >
-                <Text className="text-blue-600 font-semibold">
-                  Sign Up
-                </Text>
+            <View style={styles.signUpContainer}>
+              <Text style={styles.signUpText}>Don't have an account? </Text>
+              <TouchableOpacity onPress={() => navigation.navigate("Register")}>
+                <Text style={styles.signUpLink}>Sign Up</Text>
               </TouchableOpacity>
             </View>
 
@@ -173,3 +109,17 @@ export default function Login({ navigation }) {
     </SafeAreaView>
   );
 }
+
+const styles = StyleSheet.create({
+  container: { flex: 1, backgroundColor: "#fff" },
+  scrollContainer: { flexGrow: 1, paddingHorizontal: 24, paddingVertical: 30 },
+  inner: { flex: 1, justifyContent: "center" },
+  logo: { width: 144, height: 144, alignSelf: "center", marginBottom: 20 },
+  title: { fontSize: 28, fontWeight: "bold", textAlign: "center", marginBottom: 30 },
+  loginBtn: { marginBottom: 16, borderRadius: 25, overflow: "hidden" },
+  gradient: { paddingVertical: 14, alignItems: "center", borderRadius: 25 },
+  loginText: { color: "#fff", fontSize: 18, fontWeight: "600" },
+  signUpContainer: { flexDirection: "row", justifyContent: "center", marginTop: 10 },
+  signUpText: { color: "#6B7280", fontSize: 16 },
+  signUpLink: { color: "#2563EB", fontSize: 16, fontWeight: "600" },
+});
