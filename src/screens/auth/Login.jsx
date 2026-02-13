@@ -15,6 +15,7 @@ import { AntDesign, Feather } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import Loader from "../../components/common/Loader";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import { supabase } from "../../services/supabaseClient";
 
 export default function Login({ navigation }) {
   const [email, setEmail] = useState("");
@@ -22,18 +23,30 @@ export default function Login({ navigation }) {
   const [secure, setSecure] = useState(true);
   const [loading, setLoading] = useState(false);
 
-  const handleLogin = () => {
+  const handleLogin = async () => {
     if (!email || !password) {
       return Alert.alert("Error", "Please enter email and password");
     }
 
-    setLoading(true);
+    try {
+      setLoading(true);
 
-    setTimeout(() => {
-      setLoading(false);
-      Alert.alert("Success", `Logged in as ${email}`);
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+
+      if (error) {
+        throw error;
+      }
+
+      Alert.alert("Success", "Logged in successfully");
       navigation.replace("Home");
-    }, 2000);
+    } catch (error) {
+      Alert.alert("Login Error", error.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (

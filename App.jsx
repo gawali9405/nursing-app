@@ -1,4 +1,3 @@
- 
 import "./global.css";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { AuthProvider } from "./src/contexts/AuthContext";
