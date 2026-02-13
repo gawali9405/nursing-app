@@ -1,11 +1,10 @@
- 
-import { NavigationContainer } from "@react-navigation/native";
-import BottomTabs from "./BottomTabs";
+ import { NavigationContainer } from "@react-navigation/native";
+import DrawerNavigator from "./DrawerNavigator";
 
 export default function AppNavigator() {
   return (
     <NavigationContainer>
-      <BottomTabs />
+      <DrawerNavigator />
     </NavigationContainer>
   );
 }
