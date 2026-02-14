@@ -20,7 +20,7 @@ export default function AppHeader({
       colors={lightTheme ? ["#f0f4f8", "#ffffff"] : ["#1E1E1E", "#2A2A2A"]}
       start={{ x: 0, y: 0 }}
       end={{ x: 1, y: 0 }}
-      style={{ paddingTop: insets.top + extraTopPadding, paddingBottom: 12, paddingHorizontal: 16 }}
+      style={{ paddingTop: insets.top + extraTopPadding, paddingBottom: 2, paddingHorizontal: 16 }}
     >
       <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
         <TouchableOpacity onPress={onMenuPress}>

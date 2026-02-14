@@ -1,29 +1,41 @@
-import React, { useState, useEffect } from "react";
-import { Text, View } from "react-native";
+import React from "react";
+import { ScrollView, View, StyleSheet } from "react-native";
 import ScreenWrapper from "../../components/layout/ScreenWrapper";
+import CategoryCard from "../../components/common/card/CategoryCard";
+import { TEST_CATEGORIES } from "../../constants/testCategories";
+import QuickActions from "../../components/common/card/QuickActions";
+import HomeBannerSlider from "../../components/common/card/HomeBannerSlider";
 
-export default function Home() {
-  const [loading, setLoading] = useState(true);
-  const [welcome, setWelcome] = useState("");
-
-  useEffect(() => {
-    setTimeout(() => {
-      setWelcome("Welcome to NPath!");
-      setLoading(false);
-    }, 1500);
-  }, []);
-
+export default function Home({ navigation }) {
   return (
-    <ScreenWrapper title="Home" loading={loading} lightTheme>
-      <View className="mt-4">
-        <Text className="text-gray-800 text-lg font-semibold">{welcome}</Text>
+    <ScreenWrapper title="Home" lightTheme>
+      <ScrollView contentContainerStyle={styles.container}>
 
-        <View className="mt-6 bg-gray-100 p-4 rounded-lg shadow">
-          <Text className="text-gray-800 font-medium text-base">
-            Start your first test series today!
-          </Text>
+        <HomeBannerSlider />
+        <View style={styles.grid}>
+          {TEST_CATEGORIES.map((category) => (
+            <CategoryCard
+              key={category.id}
+              title={category.title}
+              icon={category.icon}
+              onPress={() => navigation.navigate(category.screen)}
+            />
+          ))}
         </View>
-      </View>
+
+        {/* Quick Actions */}
+        <QuickActions navigation={navigation} />
+
+
+      </ScrollView>
     </ScreenWrapper>
   );
 }
+
+const styles = StyleSheet.create({
+  grid: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    justifyContent: "space-between",
+  },
+});

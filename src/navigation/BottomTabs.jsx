@@ -11,7 +11,7 @@ import AppHeader from "../components/layout/AppHeader";
 const Tab = createBottomTabNavigator();
 
 const headerTitles = {
-  Home: "Home",
+  Home: "Ready to practice today?",
   ExamList: "Exam List",
   Mentorship: "Mentorship",
   Profile: "Profile",

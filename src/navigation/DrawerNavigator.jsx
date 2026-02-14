@@ -1,4 +1,3 @@
-// src/navigation/DrawerNavigator.jsx
 import React, { useContext } from "react";
 import { View, Text, Pressable, Image, ScrollView, Alert, Linking } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -8,6 +7,7 @@ import { Ionicons } from "@expo/vector-icons";
 import BottomTabs from "./BottomTabs";
 import { drawerItems, logoutItem } from "../assets/icons/drawerData";
 import { AuthContext } from "../contexts/AuthContext";
+import NotificationsScreen from "../screens/Notification/NotificationsScreen";
 
 const Drawer = createDrawerNavigator();
 
@@ -15,30 +15,30 @@ const Drawer = createDrawerNavigator();
 // Drawer Item Component
 // -----------------------------
 const DrawerItem = ({ label, icon, onPress, isActive, isNew }) => (
-  <Pressable
-    onPress={onPress}
-    style={({ pressed }) => ({
-      paddingVertical: 12,
-      paddingHorizontal: 16,
-      marginBottom: 8,
-      borderRadius: 8,
-      backgroundColor: isActive ? "#EEF2FF" : "#F9FAFB",
-      opacity: pressed ? 0.7 : 1,
-    })}
-    android_ripple={{ color: "#E5E7EB" }}
-  >
-    <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginBottom: 16 }}>
-      <View style={{ flexDirection: "row", alignItems: "center" }}>
-        {React.cloneElement(icon, { size: 28, style: { marginRight: 12, color: "#6B7280" } })}
-        <Text style={{ fontSize: 19, color: "#6B7280", fontWeight: "400" }}>{label}</Text>
-      </View>
-      {isNew && (
-        <View style={{ backgroundColor: "#5250C4", borderRadius: 12, paddingHorizontal: 8, paddingVertical: 2 }}>
-          <Text style={{ color: "white", fontSize: 12, fontWeight: "500" }}>NEW</Text>
+  <View style={{ marginVertical: 6 }}>
+    <Pressable
+      onPress={onPress}
+      style={({ pressed }) => ({
+        paddingVertical: 16,
+        paddingHorizontal: 16,
+        borderRadius: 8,
+        backgroundColor: isActive ? "#EEF2FF" : "#F9FAFB",
+        opacity: pressed ? 0.7 : 1,
+      })}
+    >
+      <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
+        <View style={{ flexDirection: "row", alignItems: "center" }}>
+          {icon ? React.cloneElement(icon, { size: 28, style: { marginRight: 12, color: "#6B7280" } }) : null}
+          <Text style={{ fontSize: 19, color: "#6B7280", fontWeight: "400" }}>{label}</Text>
         </View>
-      )}
-    </View>
-  </Pressable>
+        {isNew && (
+          <View style={{ backgroundColor: "#5250C4", borderRadius: 12, paddingHorizontal: 8, paddingVertical: 2 }}>
+            <Text style={{ color: "white", fontSize: 12, fontWeight: "500" }}>NEW</Text>
+          </View>
+        )}
+      </View>
+    </Pressable>
+  </View>
 );
 
 // -----------------------------
@@ -104,7 +104,8 @@ const CustomDrawerContent = ({ navigation, state }) => {
             paddingVertical: 12,
             borderRadius: 25,
             backgroundColor: "#25D366",
-            marginVertical: 8,
+            marginTop: 24,
+            marginBottom: 24,
             marginHorizontal: 16,
           }}
         >
@@ -125,7 +126,6 @@ const CustomDrawerContent = ({ navigation, state }) => {
                 onPress: async () => {
                   try {
                     await signOut();
-                    // No need to navigate manually if your root checks `user`
                   } catch (error) {
                     Alert.alert("Error", error.message);
                   }
@@ -140,15 +140,8 @@ const CustomDrawerContent = ({ navigation, state }) => {
           })}
         >
           <View style={{ flexDirection: "row", alignItems: "center" }}>
-            {React.cloneElement(logoutItem.icon, { size: 26, color: "#EF4444" })}
-            <Text
-              style={{
-                marginLeft: 12,
-                color: "#EF4444",
-                fontSize: 18,
-                fontWeight: "500",
-              }}
-            >
+            {logoutItem.icon ? React.cloneElement(logoutItem.icon, { size: 26, color: "#EF4444" }) : null}
+            <Text style={{ marginLeft: 12, color: "#EF4444", fontSize: 18, fontWeight: "500" }}>
               {logoutItem.label}
             </Text>
           </View>
@@ -177,6 +170,11 @@ const DrawerNavigator = () => {
         name="Main"
         component={BottomTabs}
         options={{ drawerLabel: () => null, title: null, drawerItemStyle: { display: "none" } }}
+      />
+      <Drawer.Screen
+        name="Notifications"
+        component={NotificationsScreen}
+        options={{ drawerLabel: "Notifications" }}
       />
     </Drawer.Navigator>
   );
