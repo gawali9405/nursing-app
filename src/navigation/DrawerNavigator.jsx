@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { View, Text, Pressable, Image, ScrollView, Alert, Linking } from "react-native";
+import { View, Text, Pressable, Image, ScrollView, Alert, Linking, TouchableOpacity } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { Ionicons } from "@expo/vector-icons";
@@ -8,6 +8,10 @@ import BottomTabs from "./BottomTabs";
 import { drawerItems, logoutItem } from "../assets/icons/drawerData";
 import { AuthContext } from "../contexts/AuthContext";
 import NotificationsScreen from "../screens/Notification/NotificationsScreen";
+import OfflineDownloadsScreen from "../screens/OfflineDownloads/OfflineDownloadsScreen";
+import PrivacyPolicy from "../screens/PrivacyPolicy/PrivacyPolicy";
+import HelpSupport from "../screens/HelpSupport/HelpSupport";
+import HowToUse from "../screens/HowToUse/HowToUse";
 
 const Drawer = createDrawerNavigator();
 
@@ -80,10 +84,14 @@ const CustomDrawerContent = ({ navigation, state }) => {
             label={item.label}
             icon={item.icon}
             onPress={() => {
-              navigation.navigate("Main", { screen: item.screen });
+              if (item.screen === 'Home') {
+                navigation.navigate('MainTabs');
+              } else {
+                navigation.navigate(item.screen);
+              }
               navigation.closeDrawer();
             }}
-            isActive={activeRoute === item.screen}
+            isActive={item.screen === 'Home' ? state?.index === 0 : activeRoute === item.screen}
             isNew={item.isNew}
           />
         ))}
@@ -160,21 +168,158 @@ const DrawerNavigator = () => {
       screenOptions={{
         headerShown: false,
         drawerType: "front",
-        drawerStyle: { width: "80%", backgroundColor: "#F9FAFB" },
+        drawerStyle: { 
+          width: "80%", 
+          backgroundColor: "#F9FAFB",
+          paddingTop: 20, // Add some padding at the top
+        },
         overlayColor: "rgba(0,0,0,0.5)",
-        sceneContainerStyle: { backgroundColor: "#F9FAFB" },
+        sceneContainerStyle: { 
+          backgroundColor: "#F9FAFB",
+        },
       }}
       drawerContent={(props) => <CustomDrawerContent {...props} />}
     >
       <Drawer.Screen
-        name="Main"
+        name="MainTabs"
         component={BottomTabs}
-        options={{ drawerLabel: () => null, title: null, drawerItemStyle: { display: "none" } }}
+        options={{
+          drawerLabel: 'Home',
+          headerShown: false,
+          drawerIcon: ({ color, size }) => (
+            <Ionicons name="home-outline" size={size} color={color} />
+          ),
+        }}
       />
+      
+      <Drawer.Screen 
+        name="Notifications" 
+        component={NotificationsScreen} 
+        options={({ navigation }) => ({
+          headerShown: true,
+          title: 'Notifications',
+          headerStyle: {
+            backgroundColor: '#5250C4',
+          },
+          headerTintColor: '#fff',
+          headerLeft: () => (
+            <TouchableOpacity 
+              onPress={() => navigation.goBack()}
+              style={{
+                marginLeft: 16,
+                padding: 8,
+                borderRadius: 20,
+              }}
+              hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+            >
+              <Ionicons name="arrow-back" size={24} color="white" />
+            </TouchableOpacity>
+          ),
+        })}
+      />
+      
       <Drawer.Screen
-        name="Notifications"
-        component={NotificationsScreen}
-        options={{ drawerLabel: "Notifications" }}
+        name="OfflineDownloads"
+        component={OfflineDownloadsScreen}
+        options={({ navigation }) => ({
+          headerShown: true,
+          title: 'Offline Downloads',
+          headerStyle: {
+            backgroundColor: '#5250C4',
+          },
+          headerTintColor: '#fff',
+          headerLeft: () => (
+            <TouchableOpacity 
+              onPress={() => navigation.goBack()}
+              style={{
+                marginLeft: 16,
+                padding: 8,
+                borderRadius: 20,
+              }}
+              hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+            >
+              <Ionicons name="arrow-back" size={24} color="white" />
+            </TouchableOpacity>
+          ),
+        })}
+      />
+      
+      <Drawer.Screen
+        name="PrivacyPolicy"
+        component={PrivacyPolicy}
+        options={({ navigation }) => ({
+          headerShown: true,
+          title: 'Privacy Policy',
+          headerStyle: {
+            backgroundColor: '#5250C4',
+          },
+          headerTintColor: '#fff',
+          headerLeft: () => (
+            <TouchableOpacity 
+              onPress={() => navigation.goBack()}
+              style={{
+                marginLeft: 16,
+                padding: 8,
+                borderRadius: 20,
+              }}
+              hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+            >
+              <Ionicons name="arrow-back" size={24} color="white" />
+            </TouchableOpacity>
+          ),
+        })}
+      />
+      
+      <Drawer.Screen
+        name="HelpSupport"
+        component={HelpSupport}
+        options={({ navigation }) => ({
+          headerShown: true,
+          title: 'Help & Support',
+          headerStyle: {
+            backgroundColor: '#5250C4',
+          },
+          headerTintColor: '#fff',
+          headerLeft: () => (
+            <TouchableOpacity 
+              onPress={() => navigation.goBack()}
+              style={{
+                marginLeft: 16,
+                padding: 8,
+                borderRadius: 20,
+              }}
+              hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+            >
+              <Ionicons name="arrow-back" size={24} color="white" />
+            </TouchableOpacity>
+          ),
+        })}
+      />
+
+      <Drawer.Screen
+        name="HowToUse"
+        component={HowToUse}
+        options={({ navigation }) => ({
+          headerShown: true,
+          title: 'How to Use',
+          headerStyle: {
+            backgroundColor: '#5250C4',
+          },
+          headerTintColor: '#fff',
+          headerLeft: () => (
+            <TouchableOpacity 
+              onPress={() => navigation.goBack()}
+              style={{
+                marginLeft: 16,
+                padding: 8,
+                borderRadius: 20,
+              }}
+              hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+            >
+              <Ionicons name="arrow-back" size={24} color="white" />
+            </TouchableOpacity>
+          ),
+        })}
       />
     </Drawer.Navigator>
   );

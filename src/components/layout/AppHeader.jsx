@@ -1,5 +1,3 @@
- 
-
 import React from "react";
 import { View, Text, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
@@ -16,29 +14,41 @@ export default function AppHeader({
   const insets = useSafeAreaInsets();
 
   return (
-    <LinearGradient
-      colors={lightTheme ? ["#f0f4f8", "#ffffff"] : ["#1E1E1E", "#2A2A2A"]}
-      start={{ x: 0, y: 0 }}
-      end={{ x: 1, y: 0 }}
-      style={{ paddingTop: insets.top + extraTopPadding, paddingBottom: 2, paddingHorizontal: 16 }}
-    >
-      <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
+    <View style={{
+      backgroundColor: '#5250C4',
+      paddingTop: insets.top + extraTopPadding,
+      paddingBottom: 14,
+      paddingHorizontal: 16,
+      zIndex: 1,
+      elevation: 2,
+      shadowColor: '#000',
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.1,
+      shadowRadius: 4,
+    }}>
+      <View style={{
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
+      }}>
         <TouchableOpacity onPress={onMenuPress}>
-          <Ionicons name="menu-outline" size={28} color={lightTheme ? "#111827" : "#fff"} />
+          <Ionicons name="menu-outline" size={28} color="#fff" />
         </TouchableOpacity>
 
-        <Text style={{ fontSize: 18, fontWeight: "bold", color: lightTheme ? "#111827" : "#fff" }}>
+        <Text style={{
+          fontSize: 18,
+          fontWeight: "600",
+          color: "#fff"
+        }}>
           {title}
         </Text>
 
         <View style={{ flexDirection: "row", alignItems: "center", gap: 10 }}>
           <TouchableOpacity onPress={onNotificationPress}>
-            <Ionicons name="notifications-outline" size={26} color={lightTheme ? "#111827" : "#fff"} />
+            <Ionicons name="notifications-outline" size={24} color="#fff" />
           </TouchableOpacity>
         </View>
       </View>
-    </LinearGradient>
+    </View>
   );
 }
-
- 

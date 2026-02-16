@@ -24,20 +24,20 @@ export const drawerItems = [
         screen: "Settings"
     },
     {
-        label: "Privacy Policy",
-        icon: <Ionicons name="shield-checkmark-outline" />,
-        screen: "PrivacyPolicy"
-    },
-    {
         label: "How to use the App",
         icon: <Ionicons name="help-circle-outline" />,
-        screen: "Tutorial",
+        screen: "HowToUse",
     },
     {
         label: "Help and Support",
         icon: <Ionicons name="help-buoy-outline" />,
         screen: "HelpSupport",
         isNew: true
+    },
+    {
+        label: "Privacy Policy",
+        icon: <Ionicons name="shield-checkmark-outline" />,
+        screen: "PrivacyPolicy"
     },
 ];
 

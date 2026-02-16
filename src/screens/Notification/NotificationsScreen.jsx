@@ -17,14 +17,7 @@ export default function NotificationsScreen() {
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      {/* Header with Back Arrow */}
-      <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
-          <Ionicons name="arrow-back-outline" size={26} color="#555" />
-        </TouchableOpacity>
-        <Text style={styles.heading}>Notifications</Text>
-      </View>
-
+     
       {/* Notifications List */}
       <FlatList
         contentContainerStyle={{ paddingBottom: 20 , paddingTop: 10}}

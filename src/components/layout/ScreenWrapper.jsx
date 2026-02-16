@@ -1,5 +1,4 @@
- 
-import React from "react";
+ import React from "react";
 import { ScrollView } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Loader from "../common/Loader";
@@ -8,14 +7,23 @@ export default function ScreenWrapper({ loading = false, children, lightTheme = 
   if (loading) return <Loader message="Loading..." lightTheme={lightTheme} />;
 
   return (
-    <SafeAreaView className={`flex-1 ${lightTheme ? "bg-white" : "bg-gray-900"}`}>
+    <SafeAreaView 
+      className={`flex-1 ${lightTheme ? "bg-white" : "bg-gray-900"}`}
+      style={{ flex: 1 }}
+      edges={['right', 'bottom', 'left']}
+    >
       <ScrollView
-        contentContainerStyle={{ padding: 16, paddingBottom: 100 }}
+        contentContainerStyle={{ 
+          paddingTop: 0,
+          paddingHorizontal: 16,
+          paddingBottom: 100,
+        }}
         showsVerticalScrollIndicator={false}
+        bounces={false}
+        scrollEventThrottle={16}
       >
         {children}
       </ScrollView>
     </SafeAreaView>
   );
 }
- 

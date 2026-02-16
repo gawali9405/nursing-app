@@ -85,22 +85,25 @@ export default function QuickActions({ navigation }) {
 
 const styles = StyleSheet.create({
   page: {
-    width: width,
+    width: width - 40, // Reduce width to account for padding
     alignItems: "center",
+    paddingHorizontal: 20, // Add horizontal padding
   },
   card: {
-    width: width - 32,
+    width: '100%',
     height: 160,
     backgroundColor: "#fff",
     borderRadius: 24,
     justifyContent: "center",
     alignItems: "center",
     elevation: 6,
+    marginHorizontal: 10, // Add some margin between cards
   },
   text: {
     marginTop: 14,
     fontSize: 16,
     fontWeight: "700",
     color: "#111",
+    textAlign: 'center',
   },
 });
