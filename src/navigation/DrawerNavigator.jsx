@@ -12,6 +12,9 @@ import OfflineDownloadsScreen from "../screens/OfflineDownloads/OfflineDownloads
 import PrivacyPolicy from "../screens/PrivacyPolicy/PrivacyPolicy";
 import HelpSupport from "../screens/HelpSupport/HelpSupport";
 import HowToUse from "../screens/HowToUse/HowToUse";
+import FreeMaterial from "../screens/FreeMaterial/FreeMaterial";
+import EditProfile from "../screens/EditProfile/EditProfile";
+import Settings from "../screens/Settings/Settings";
 
 const Drawer = createDrawerNavigator();
 
@@ -300,8 +303,9 @@ const DrawerNavigator = () => {
         name="HowToUse"
         component={HowToUse}
         options={({ navigation }) => ({
+          drawerLabel: 'How to Use',
           headerShown: true,
-          title: 'How to Use',
+          headerTitle: 'How to Use',
           headerStyle: {
             backgroundColor: '#5250C4',
           },
@@ -315,6 +319,71 @@ const DrawerNavigator = () => {
                 borderRadius: 20,
               }}
               hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+            >
+              <Ionicons name="arrow-back" size={24} color="white" />
+            </TouchableOpacity>
+          ),
+        })}
+      />
+      <Drawer.Screen 
+        name="FreeMaterial" 
+        component={FreeMaterial} 
+        options={({ navigation }) => ({ 
+          drawerLabel: 'Free Material',
+          headerShown: true,
+          headerTitle: 'Free Study Material',
+          headerStyle: {
+            backgroundColor: '#5250C4',
+          },
+          headerTintColor: '#fff',
+          headerLeft: () => (
+            <TouchableOpacity 
+              style={{ marginLeft: 16 }}
+              onPress={() => navigation.goBack()}
+            >
+              <Ionicons name="arrow-back" size={24} color="white" />
+            </TouchableOpacity>
+          ),
+        })}
+      />
+
+      <Drawer.Screen 
+        name="EditProfile" 
+        component={EditProfile} 
+        options={({ navigation }) => ({
+          drawerLabel: 'Edit Profile',
+          headerShown: true,
+          headerTitle: 'Edit Profile',
+          headerStyle: {
+            backgroundColor: '#5250C4',
+          },
+          headerTintColor: '#fff',
+          headerLeft: () => (
+            <TouchableOpacity 
+              style={{ marginLeft: 16 }}
+              onPress={() => navigation.goBack()}
+            >
+              <Ionicons name="arrow-back" size={24} color="white" />
+            </TouchableOpacity>
+          ),
+        })}
+      />
+
+      <Drawer.Screen 
+        name="Settings" 
+        component={Settings} 
+        options={({ navigation }) => ({
+          drawerLabel: 'Settings',
+          headerShown: true,
+          headerTitle: 'Settings',
+          headerStyle: {
+            backgroundColor: '#5250C4',
+          },
+          headerTintColor: '#fff',
+          headerLeft: () => (
+            <TouchableOpacity 
+              style={{ marginLeft: 16 }}
+              onPress={() => navigation.goBack()}
             >
               <Ionicons name="arrow-back" size={24} color="white" />
             </TouchableOpacity>
