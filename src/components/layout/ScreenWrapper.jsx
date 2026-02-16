@@ -1,10 +1,31 @@
  import React from "react";
-import { ScrollView } from "react-native";
+import { ScrollView, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Loader from "../common/Loader";
 
-export default function ScreenWrapper({ loading = false, children, lightTheme = true }) {
+export default function ScreenWrapper({ 
+  loading = false, 
+  children, 
+  lightTheme = true, 
+  scrollable = true,
+  contentContainerStyle = {} 
+}) {
   if (loading) return <Loader message="Loading..." lightTheme={lightTheme} />;
+
+  const content = (
+    <View 
+      style={[
+        !scrollable && { 
+          flex: 1,
+          paddingHorizontal: 16,
+          paddingBottom: 16,
+        },
+        contentContainerStyle
+      ]}
+    >
+      {children}
+    </View>
+  );
 
   return (
     <SafeAreaView 
@@ -12,18 +33,23 @@ export default function ScreenWrapper({ loading = false, children, lightTheme = 
       style={{ flex: 1 }}
       edges={['right', 'bottom', 'left']}
     >
-      <ScrollView
-        contentContainerStyle={{ 
-          paddingTop: 0,
-          paddingHorizontal: 16,
-          paddingBottom: 100,
-        }}
-        showsVerticalScrollIndicator={false}
-        bounces={false}
-        scrollEventThrottle={16}
-      >
-        {children}
-      </ScrollView>
+      {scrollable ? (
+        <ScrollView
+          contentContainerStyle={{ 
+            paddingTop: 0,
+            paddingHorizontal: 16,
+            paddingBottom: 100,
+            ...contentContainerStyle
+          }}
+          showsVerticalScrollIndicator={false}
+          bounces={false}
+          scrollEventThrottle={16}
+        >
+          {children}
+        </ScrollView>
+      ) : (
+        content
+      )}
     </SafeAreaView>
   );
 }

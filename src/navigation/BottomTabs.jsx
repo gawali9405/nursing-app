@@ -4,7 +4,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import Home from "../screens/home/Home";
 import ExamList from "../screens/exam/ExamList";
-import Mentorship from "../screens/mentorship/Mentorship";
+import MentorshipStack from "./MentorshipStack";
 import Profile from "../screens/profile/Profile";
 import AppHeader from "../components/layout/AppHeader";
 
@@ -31,6 +31,7 @@ export default function BottomTabs() {
               lightTheme={true}
               onMenuPress={() => navigation.openDrawer()}
               onNotificationPress={() => navigation.navigate("Notifications")}
+              showBackButton={route.name === 'MentorBooking'}
             />
           );
         },
@@ -61,9 +62,8 @@ export default function BottomTabs() {
     >
       <Tab.Screen name="Home" component={Home} />
       <Tab.Screen name="ExamList" component={ExamList} />
-      <Tab.Screen name="Mentorship" component={Mentorship} />
+      <Tab.Screen name="Mentorship" component={MentorshipStack} />
       <Tab.Screen name="Profile" component={Profile} />
     </Tab.Navigator>
   );
 }
-
