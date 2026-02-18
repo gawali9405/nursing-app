@@ -181,13 +181,11 @@ const styles = StyleSheet.create({
   },
   headerImageContainer: {
     height: 200,
-    width: '100%',
-    marginTop: 0,
-    marginBottom: 20,
-    borderTopLeftRadius: 0,
-    borderTopRightRadius: 0,
+    width: '100%', 
+    marginBottom: 20, 
     borderRadius: 10,
     overflow: 'hidden',
+    marginTop: 16,
   },
   headerImage: {
     width: '100%',

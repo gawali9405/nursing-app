@@ -44,4 +44,13 @@ export const TEST_CATEGORIES = [
     screen: "PreviousYear",
     icon: require("../assets/images/pyq.png"),
   },
+   {
+    id: "topicTest",
+    title: "Topic Tests",
+    subtitle: "Past exam questions",
+    count: 40,
+    colors: ["#7C3AED", "#9333EA"],
+    screen: "TopicTests",
+    icon: require("../assets/images/pyq.png"),
+  },
 ];

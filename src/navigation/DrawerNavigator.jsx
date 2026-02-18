@@ -15,6 +15,7 @@ import HowToUse from "../screens/HowToUse/HowToUse";
 import FreeMaterial from "../screens/FreeMaterial/FreeMaterial";
 import EditProfile from "../screens/EditProfile/EditProfile";
 import Settings from "../screens/Settings/Settings";
+import FreeTestsScreen from "../screens/exam/FreeTestsScreen";
 
 const Drawer = createDrawerNavigator();
 
@@ -325,6 +326,28 @@ const DrawerNavigator = () => {
           ),
         })}
       />
+      <Drawer.Screen 
+        name="FreeTests" 
+        component={FreeTestsScreen} 
+        options={({ navigation }) => ({
+          drawerLabel: 'Free Tests',
+          headerShown: true,
+          headerTitle: 'Free Tests',
+          headerStyle: {
+            backgroundColor: '#5250C4',
+          },
+          headerTintColor: '#fff',
+          headerLeft: () => (
+            <TouchableOpacity 
+              style={{ marginLeft: 16 }}
+              onPress={() => navigation.goBack()}
+            >
+              <Ionicons name="arrow-back" size={24} color="white" />
+            </TouchableOpacity>
+          ),
+        })}
+      />
+
       <Drawer.Screen 
         name="FreeMaterial" 
         component={FreeMaterial} 

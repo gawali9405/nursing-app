@@ -7,10 +7,11 @@ import {
   Dimensions,
   Animated,
 } from "react-native";
+import { LinearGradient } from "expo-linear-gradient";
 import { HOME_BANNERS } from "../../../constants/homeBanners";
 
 const { width } = Dimensions.get("window");
-const CARD_WIDTH = width - 60; // 30px padding on each side
+const CARD_WIDTH = width - 60;
 const CARD_MARGIN = 10;
 
 const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
@@ -19,50 +20,72 @@ export default function HomeBannerSlider() {
   const flatListRef = useRef(null);
   const scrollX = useRef(new Animated.Value(0)).current;
   const [currentIndex, setCurrentIndex] = useState(0);
-  
-  // Add first item to end and last item to beginning for infinite scroll
+
+  // Create loop data (last + original + first)
   const data = [
     HOME_BANNERS[HOME_BANNERS.length - 1],
     ...HOME_BANNERS,
-    HOME_BANNERS[0]
+    HOME_BANNERS[0],
   ];
 
+  /* ================= AUTO SCROLL ================= */
   useEffect(() => {
     const interval = setInterval(() => {
-      const nextIndex = (currentIndex + 1) % HOME_BANNERS.length;
-      flatListRef.current?.scrollToIndex({
-        index: nextIndex + 1, // +1 because we added an item at the beginning
-        animated: true,
+      setCurrentIndex((prevIndex) => {
+        const nextIndex = (prevIndex + 1) % HOME_BANNERS.length;
+
+        if (nextIndex === 0) {
+          flatListRef.current?.scrollToIndex({
+            index: HOME_BANNERS.length + 1,
+            animated: true,
+          });
+
+          setTimeout(() => {
+            flatListRef.current?.scrollToIndex({
+              index: 1,
+              animated: false,
+            });
+          }, 500);
+        } else {
+          flatListRef.current?.scrollToIndex({
+            index: nextIndex + 1,
+            animated: true,
+          });
+        }
+
+        return nextIndex;
       });
-      setCurrentIndex(nextIndex);
     }, 4000);
 
     return () => clearInterval(interval);
-  }, [currentIndex]);
+  }, []);
 
+  /* ================= SCROLL ANIMATION ================= */
   const handleScroll = Animated.event(
     [{ nativeEvent: { contentOffset: { x: scrollX } } }],
-    { useNativeDriver: false }
+    { useNativeDriver: true }
   );
 
   const handleMomentumScrollEnd = (e) => {
     const contentOffset = e.nativeEvent.contentOffset.x;
-    const index = Math.round(contentOffset / (CARD_WIDTH + CARD_MARGIN * 2));
-    
-    // Handle infinite scroll
+    const index = Math.round(
+      contentOffset / (CARD_WIDTH + CARD_MARGIN * 2)
+    );
+
     if (index === 0) {
-      // If at the first (cloned last) item, snap to the real last item
       flatListRef.current?.scrollToIndex({
         index: HOME_BANNERS.length,
         animated: false,
       });
       setCurrentIndex(HOME_BANNERS.length - 1);
     } else if (index === data.length - 1) {
-      // If at the last (cloned first) item, snap to the real first item
-      flatListRef.current?.scrollToIndex({ index: 1, animated: false });
+      flatListRef.current?.scrollToIndex({
+        index: 1,
+        animated: false,
+      });
       setCurrentIndex(0);
     } else {
-      setCurrentIndex(index - 1); // -1 because we added an item at the beginning
+      setCurrentIndex(index - 1);
     }
   };
 
@@ -72,6 +95,7 @@ export default function HomeBannerSlider() {
     index,
   });
 
+  /* ================= RENDER ITEM ================= */
   const renderItem = ({ item, index }) => {
     const inputRange = [
       (index - 1) * (CARD_WIDTH + CARD_MARGIN * 2),
@@ -82,13 +106,13 @@ export default function HomeBannerSlider() {
     const scale = scrollX.interpolate({
       inputRange,
       outputRange: [0.92, 1, 0.92],
-      extrapolate: 'clamp',
+      extrapolate: "clamp",
     });
 
     const opacity = scrollX.interpolate({
       inputRange,
       outputRange: [0.8, 1, 0.8],
-      extrapolate: 'clamp',
+      extrapolate: "clamp",
     });
 
     return (
@@ -102,20 +126,32 @@ export default function HomeBannerSlider() {
           },
         ]}
       >
-        <View style={[styles.banner, { backgroundColor: item.color }]}>
-          <Text style={styles.title} numberOfLines={2}>
-            {item.title}
-          </Text>
-          <Text style={styles.subtitle} numberOfLines={2}>
-            {item.subtitle}
-          </Text>
-        </View>
+        <LinearGradient
+          colors={item.gradient || ["#1E3A8A", "#3B82F6"]}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 1 }}
+          style={styles.banner}
+        >
+          <Text style={styles.title}>{item.title}</Text>
+          <Text style={styles.subtitle}>{item.subtitle}</Text>
+        </LinearGradient>
       </Animated.View>
     );
   };
 
+  /* ================= UI ================= */
   return (
-    <View style={styles.container}>
+     <LinearGradient
+  colors={[  
+    "#FF7A59", // Coral
+    "#FFA94D", // Orange
+    "#FFD1A3", // Peach
+    "#B8D8E8", // Light Blue
+  ]}
+  start={{ x: 0, y: 0 }}
+  end={{ x: 1, y: 1 }}
+  style={styles.container}
+>
       <AnimatedFlatList
         ref={flatListRef}
         data={data}
@@ -133,6 +169,7 @@ export default function HomeBannerSlider() {
         contentContainerStyle={styles.listContent}
       />
 
+      {/* Pagination */}
       <View style={styles.pagination}>
         {HOME_BANNERS.map((_, index) => (
           <View
@@ -144,68 +181,67 @@ export default function HomeBannerSlider() {
           />
         ))}
       </View>
-    </View>
+    </LinearGradient>
   );
 }
 
+/* ================= STYLES ================= */
+
 const styles = StyleSheet.create({
   container: {
-    marginVertical: 12,
+    paddingTop: 22,
+    paddingBottom: 20,
+    width: "100%",
   },
   listContent: {
-    paddingHorizontal: 20 - CARD_MARGIN, // Compensate for margin on items
+    paddingHorizontal: 20,
+    alignItems: "center",
   },
   page: {
     width: CARD_WIDTH,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   banner: {
-    width: '100%',
+    width: "100%",
     height: 150,
     borderRadius: 16,
     padding: 20,
-    justifyContent: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
+    justifyContent: "center",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.2,
+    shadowRadius: 8,
+    elevation: 5,
+    overflow: "hidden",
   },
   title: {
-    color: '#fff',
-    fontSize: 20,
-    fontWeight: '800',
+    color: "#fff",
+    fontSize: 22,
+    fontWeight: "800",
     marginBottom: 8,
-    textShadowColor: 'rgba(0, 0, 0, 0.2)',
-    textShadowOffset: { width: 1, height: 1 },
-    textShadowRadius: 2,
+    letterSpacing: 0.5,
   },
   subtitle: {
-    color: 'rgba(255, 255, 255, 0.9)',
+    color: "rgba(255, 255, 255, 0.9)",
     fontSize: 14,
     lineHeight: 20,
-    textShadowColor: 'rgba(0, 0, 0, 0.2)',
-    textShadowOffset: { width: 1, height: 1 },
-    textShadowRadius: 2,
   },
   pagination: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 12,
-    paddingHorizontal: 20,
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 16,
   },
   dot: {
     width: 6,
     height: 6,
     borderRadius: 3,
-    backgroundColor: 'rgba(0, 0, 0, 0.2)',
+    backgroundColor: "rgba(0,0,0,0.2)",
     marginHorizontal: 3,
-    transition: 'all 0.3s ease',
   },
   activeDot: {
     width: 20,
-    backgroundColor: '#007AFF',
+    backgroundColor: "#2563EB",
   },
 });

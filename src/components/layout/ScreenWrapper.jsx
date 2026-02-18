@@ -17,7 +17,6 @@ export default function ScreenWrapper({
       style={[
         !scrollable && { 
           flex: 1,
-          paddingHorizontal: 16,
           paddingBottom: 16,
         },
         contentContainerStyle
@@ -37,7 +36,6 @@ export default function ScreenWrapper({
         <ScrollView
           contentContainerStyle={{ 
             paddingTop: 0,
-            paddingHorizontal: 16,
             paddingBottom: 100,
             ...contentContainerStyle
           }}
